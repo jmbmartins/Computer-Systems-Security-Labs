@@ -419,22 +419,47 @@ $ openssl dgst -sha256 -verify pk.pem -signature noticias.sig noticias.txt
 --------------------------------------------------------------------------------
 ## Derivação de Chaves de Cifra
 
+### Representação de Passwords
 *root:$1$hODZpn2J$fffGRrpV6O/8tF2XuCSrM1*:
   1. *root* - utilizador.
   2. *$1* - indica que está a ser usado o algoritmo 1 para tratamento e armazenamento da password (algooritmo baseado no *hash* MD5)).
   3. *$hODZpn2J$* - *salt* utilizado.
   4. *$fffGRrpV6O/8tF2XuCSrM1$* - valor que o sistema operativo guarda da password.
 
-Comando que permite criar a representação da password *supermancom* o *salt* *LoisLane*
+#### Exemplo: Criar a representação da password *supermancom* o *salt* *LoisLane*
 - `openssl passwd -6 -salt LoisLan superman`
 
+--------------------------------------------------------------------------------
+## Teste de Comunicações TLS
 
-### Teste de Comunicações TLS
-
-Comando que estabeleça ligação com o site da google:
+### Estabelecer Ligação com o Site da Google
 `openssl s_client -tls1_3 www.google.com:443 `
 
+#### Indica a Localização dos Certificados de Raiz:
+`openssl s_client -connect www.ubi.pt:443 -CApath /etc/ssl2/`
 
+### Fazer Pedidos *HTTP* a Sites
+1. `openssl s_client -connect www.ubi.pt:433`
+2. ```
+   GET /Default.aspx HTTP/1.1
+    Host: www.ubi.pt ```
+
+3. Ver mensagens trocadas: `openssl s_client -connect www.ubi.pt:443 -tls1_2 -msg`
+
+
+### Simular Sevidor TLS
+
+1. Correr Servidor:
+`openssl s_server -nocert -cipher ADH:@SECLEVEL=0`
+
+2. Conectar-se ao Servidor:
+`openssl s_client -connect localhost -cipher ADH:@SECLEVEL=0`
+
+3. Criar certificado no ficheiro `server.pem` e guarda as chaves *RSA* em `serverkey.pem`
+`openssl req -new -x509 -extensions v3_ca -keyout serverkey.pem -out server.pem -days 1825`
+
+4. Atribuir certificado a página *HTML*:
+`openssl s_server -cert server.pem -key serverkey.pem -WWW index.html`
 
 
 
