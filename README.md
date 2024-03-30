@@ -12,6 +12,11 @@
   $ zip comprimido.txt texto.txt
   ~~~
 
+- 10 bytes pseudoaleatórios em hexadecimal:
+  ~~~console
+  $ openssl rand -hex 10
+  ~~~
+
 ## Comandos Gerais OpenSSL 
 
 - Gera um conjunto de bytes pseudo-aleatórios:
@@ -410,6 +415,24 @@ Example:
 $ openssl dgst -sha256 -verify pk.pem -signature noticias.sig noticias.txt
 ~~~
 
+
+--------------------------------------------------------------------------------
+## Derivação de Chaves de Cifra
+
+*root:$1$hODZpn2J$fffGRrpV6O/8tF2XuCSrM1*:
+  1. *root* - utilizador.
+  2. *$1* - indica que está a ser usado o algoritmo 1 para tratamento e armazenamento da password (algooritmo baseado no *hash* MD5)).
+  3. *$hODZpn2J$* - *salt* utilizado.
+  4. *$fffGRrpV6O/8tF2XuCSrM1$* - valor que o sistema operativo guarda da password.
+
+Comando que permite criar a representação da password *supermancom* o *salt* *LoisLane*
+- `openssl passwd -6 -salt LoisLan superman`
+
+
+### Teste de Comunicações TLS
+
+Comando que estabeleça ligação com o site da google:
+`openssl s_client -tls1_3 www.google.com:443 `
 
 
 
