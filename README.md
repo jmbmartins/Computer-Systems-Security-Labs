@@ -462,8 +462,32 @@ $ openssl dgst -sha256 -verify pk.pem -signature noticias.sig noticias.txt
 `openssl s_server -cert server.pem -key serverkey.pem -WWW index.html`
 
 
+## Autenticação de Entidades: Autenticação Fraca, Razoavelmente Forte e Forte
+
+### Autenticação Forte
+
+#### Protocolo CHAP (*Challenge-Handshake Authentication Protocol*)
+
+Processo:
+1. Início da conexão: Quando a conexão é estabelecida inicialmente, o servidor envia uma "mensagem de desafio" para o cliente.
+
+2. Resposta ao desafio: O cliente responde ao desafio calculando um valor com base no desafio e na senha conhecida. Este valor é calculado usando uma função de hash, como MD5. A resposta é então enviada de volta para o servidor.
+
+3. Verificação: O servidor, que também conhece a senha, realiza o mesmo cálculo e compara o resultado com a resposta do cliente. Se os valores corresponderem, o servidor sabe que o cliente tem a senha correta e a autenticação é bem-
+
+- **Não necessita** que as comunicações sejam cifradas.
+- Precisam ser trocadas **três** mensagens: Desafio, Resposta, Sucesso ou Falha.
+- O segredo fica **guardado em ambos os intervenientes**: O servidor usa o segredo para gerar o desafio que é enviado ao cliente. O cliente, por sua vez, usa o segredo para responder ao desafio. O servidor então verifica a resposta do cliente usando sua própria cópia do segredo.
 
 
+#### Assinatura Digital
+
+Processo:
+1. Geração de Chaves: O requerente gera um par de chaves - uma chave privada e uma chave pública. A chave privada é mantida em segredo pelo requerente, enquanto a chave pública pode ser compartilhada com qualquer pessoa.
+
+2. Criação da Assinatura Digital: Quando o requerente deseja enviar uma mensagem, ele cria uma assinatura digital para a mensagem usando sua chave privada. A assinatura digital é geralmente o resultado de uma função de hash aplicada à mensagem, que é então criptografada usando a chave privada.
+
+3. Verificação da Assinatura Digital: O autenticador recebe a mensagem e a assinatura digital. Ele então usa a chave pública do requerente para descriptografar a assinatura digital e obter o valor do hash. O autenticador também aplica a mesma função de hash à mensagem recebida. Se os dois valores de hash correspondem, a assinatura digital é verificada e a mensagem é considerada autêntica.
 
 
 
