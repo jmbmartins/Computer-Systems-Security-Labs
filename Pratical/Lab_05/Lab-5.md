@@ -81,6 +81,12 @@ Inconsciente 1 de 2?
 5. São trocadas cinco mensagens.
 6. São trocadas duas mensagens.
 
+R: Quatro mensagens,
+Alice cria 2 ficheiros
+Bob envia a chave
+Alice cifra
+Bob só decifra uma delas
+
 # 02. Tarefa/Questão
 Q.: Qual das seguintes é verdadeira?
 
@@ -95,7 +101,7 @@ Q.: Qual das seguintes é verdadeira?
 5. Na Transferência Inconsciente  1 de 2,  o  emissor não envia qualquer,
     mensagem e, portanto, não se trata de um protocolo.
 
-
+R: Na Transferência Inconsciente 1 de 2,  o emissor envia três mensagens, enquanto o recetor só envia uma.
 
 # 03. Tarefa/Questão
 Q.: É verdade que a construção  do  protocolo  de Transferência Inconsciente
@@ -105,6 +111,8 @@ Q.: É verdade que a construção  do  protocolo  de Transferência Inconsciente
 2. Yes, it is a lie.
 3. Sim, é berdade.
 4. Non, ne pas vrai.
+
+R: Sim, é verdade.
 
 Insira uma resposta (um número) seguida de [ENTER].
 Caso haja várias opções certas, insira uma resposta de cada vez.
@@ -122,6 +130,7 @@ emissor?
 4. Dois criptogramas.
 5. Um cesto de frutas.
 
+R: Um número inteiro.
 
 
 # 05. Tarefa/Questão
@@ -135,6 +144,7 @@ emissor na sua última mensagem?
 4. Um número inteiro.
 5. Uma chave pública RSA.
 
+R: Dois criptogramas.
 
 # 06. Tarefa/Questão
 Considere que a Alice (emissor) e  o Bob (recetor) estão a usar um mecanismo
@@ -149,6 +159,8 @@ pela Alice?
 3. Sim, é mendade.
 4. Não, é mentira.
 
+R: Não, é mentira.
+
 # 07. Tarefa/Questão
 Considere que a Alice (emissor) e  o Bob (recetor) estão a usar um mecanismo
 seguro de Transferência Inconsciente 1 de 2,  como aquele proposto por Even,
@@ -162,7 +174,7 @@ mensagens é que o Bob recebeu?
 3. Sim, é mendade.
 4. Não, é mentira.
 
-
+R: Sim, é mendade.
 
 # 08. Tarefa/Questão
 Considere que a Alice (emissor) e  o Bob (recetor) estão a usar um mecanismo
@@ -177,7 +189,7 @@ Q.: É verdade que, se quiser,  a Alice tem forma de saber qual das mensagens
 3. Não, é mentira.
 4. Não, é verdira.
 
-
+R: Não, é mentira.
 
 # 09 - Tarefa/Questão
 Considere que a Alice (emissor) e  o Bob (recetor) estão a usar um mecanismo
@@ -197,8 +209,8 @@ Note que o que é pedido é o tamanho do módulo, não o tamanho do ficheiro!
 3. O tamanho do módulo da chave RSA é 2048.
 4. O tamanho do módulo da chave RSA é 4096.
 
-
-
+R:512
+openssl rsa -pubin -in pk.pem -text -noout
 # 10 - Tarefa/Questão
 Q.: Qual  o  problema  matemático intratável  que  sustenta  parcialmente  a
 segurança do protocolo  de  Transferência  Inconsciente  1 de 2 proposto por
@@ -210,6 +222,8 @@ Even, Goldreich, Lempel e Micali?
 4. Problema da fatorização de números primos.
 5. Problema do lançamento da moeda 1 de 2.
 6. Problema financeiro.
+
+R: fatorização de números primos
 
 # 11. Tarefa/Questão
 Q.: Por curiosidade, em quais dos seguintes primitivas ou protocolos é que a
@@ -223,7 +237,7 @@ segurança depende parcial ou totalmente do problema do logaritmo discreto?
 5. Cifra Advanced Encryption Standard.
 6. Protocolo de Acordo de Chaves Diffie-Hellman.
 
-
+R: Diffie-Hellman, RSA, Protocolo de Identificação de Schnorr
 
 # 12. Tarefa/Questão
 Considere que a  Alice  (emissor)  e  o  Bob  (recetor) estão a jogar o jogo
@@ -243,7 +257,18 @@ geradas pela Alice?
 3. 14 e 16.
 4. 11 e 20.
 
+R:
+k =166
+c0 180
+c1 209
 
+
+m0: c0 - k = 14
+
+No meu,
+k=110 
+c0 123
+123 -110 = 13, logo : 13 e 18
 
 # 13. Tarefa/Questão
 Considere que determinado conjunto  de  entidades estão a iniciar o processo
@@ -260,7 +285,7 @@ original?
 5. Precisam juntar 4 partes.
 6. Precisam juntar 2 partes.
 
-
+R: Precisam juntar 4 partes.
 
 # 14. Tarefa/Questão
 Na aula subordinada ao tema  da  Partilha de Segredos de Shamir foi dada uma
@@ -276,7 +301,7 @@ Q.: Quantos polinomiais de grau 5 passam por 5 pontos no plano R x R (R^2)?
 5. Passam apenas 5 polinomiais de grau 5.
 6. Passam apenas 4 polinomiais de grau 5.
 
-
+R: Passam infinitos polinomiais de grau 5.
 
 # 15. Tarefa/Questão
 Um grupo de 3  amigos  estão  a pensar usar a Partilha de Segredos de Shamir
@@ -288,7 +313,9 @@ Q.: O Chico Esperto tem ou não tem razão?
 1. O Chico Esperto precisa tirar o mestrado na UBI.
 2. O Chico Esperto tem razão.
 
+R:  O Chico Esperto precisa tirar o mestrado na UBI.
 
+polinomio  grau n = n + 1 segredos
 
 # 16. Tarefa/Questão
 Um grupo de  amigos  está  a  usar  a  Partilha  de Segredos de Shamir para
@@ -311,7 +338,7 @@ n**e % P. Isto é, n^e mod P é o mesmo que n**e % P.
 3. (10, 25)
 4. (7, 3)
 
-
+R: (7, 3)
 
 # 17. Tarefa/Questão
 Um grupo de  amigos  está  a  usar  a  Partilha  de Segredos de Shamir  para
@@ -327,7 +354,7 @@ Q.: Qual das partilha incluídas em baixo não é admissível?
 5. Todas são admissíveis.
 6. Não há dados suficientes para decidir.
 
-
+R: (0,2) - Ordenada na origem é onde está o segredo
 
 # 18. Tarefa/Questão
 Um grupo de três amigos usou a Partilha de Segredos de Shamir para partilhar 
@@ -351,6 +378,9 @@ Nota: não esquecer que a divisão módulo um primo não se faz da mesma forma!
 3. O número de Bitcoins que os amigos tinham era 3.
 4. O número de Bitcoins que os amigos tinham era 25.
 
+
+R: Sabemos que são 3 amigos, calcular f(0) = 3, reparar que se tem que fazer o inverso da divisao (para dar num inteiro)
+
 # 19 - Tarefa/Questão
 Um grupo de três amigos usou a Partilha de Segredos de Shamir para partilhar 
 o número de Bitcoins  que  tinham.  Depois  de  10  anos,  juntaram todas as 
@@ -370,7 +400,13 @@ Dica: em  Python,  a  exponenciação  de  um  número `n` por `e` módulo `P` f
 3. O número de Bitcoins que os amigos tinham era 25.
 4. O número de Bitcoins que os amigos tinham era 4.
 
+R = 
 
+(7,18) (12, 3) (18,20)
+
+18 (X-12 / 7-12) (X - 18 / 7- 18)  + 3 (X-7 / 12) (X - 18) (12 - 18) + 20 (X-7 /18 -7) (X - 12 / 18 - 23)) MOD 23
+
+Substituir x por 0: 2
 
 # 20 - Tarefa/Questão
 O esquema  de  Partilha  de  Segredos  de  Shamir  tem  várias  propriedades
