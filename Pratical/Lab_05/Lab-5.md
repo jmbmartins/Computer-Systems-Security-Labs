@@ -82,10 +82,7 @@ Inconsciente 1 de 2?
 6. São trocadas duas mensagens.
 
 R: Quatro mensagens,
-Alice cria 2 ficheiros
-Bob envia a chave
-Alice cifra
-Bob só decifra uma delas
+
 
 # 02. Tarefa/Questão
 Q.: Qual das seguintes é verdadeira?
@@ -237,7 +234,7 @@ segurança depende parcial ou totalmente do problema do logaritmo discreto?
 5. Cifra Advanced Encryption Standard.
 6. Protocolo de Acordo de Chaves Diffie-Hellman.
 
-R: Diffie-Hellman, RSA, Protocolo de Identificação de Schnorr
+R: Diffie-Hellman, El-Gamal, Protocolo de Identificação de Schnorr
 
 # 12. Tarefa/Questão
 Considere que a  Alice  (emissor)  e  o  Bob  (recetor) estão a jogar o jogo
