@@ -490,6 +490,31 @@ Processo:
 3. Verificação da Assinatura Digital: O autenticador recebe a mensagem e a assinatura digital. Ele então usa a chave pública do requerente para descriptografar a assinatura digital e obter o valor do hash. O autenticador também aplica a mesma função de hash à mensagem recebida. Se os dois valores de hash correspondem, a assinatura digital é verificada e a mensagem é considerada autêntica.
 
 
+## Partilha Segura de Segredos e Computação Segura Multipartes
 
+### Transferência Inconsciente 1 de 2 
 
+#### Conceito
+Um protocolo que permite que uma entidade envie uma de várias informações para outra entidade, mas **desconhecendo qual foi recebida (ou até se qualquer uma delas terá sido recebida)**. Envio de, no máximo, uma informação em duas possíveis. RSA / Bob envia `v` / Alice envia `c1`, `c2` / Problema da fatorização de números primos.
+Utilidade: O emissor não sabe qual mensagem o receptor escolheu, e o receptor só consegue decifrar a mensagem que escolheu, não a outra. (votação eletrónica)
 
+#### Sequência de Acontecimentos
+1.  O emissor tem duas mensagens, m1 e m2.
+2.  O receptor decide qual mensagem quer receber, mas não revela sua escolha ao emissor.
+3.  O emissor envia informações suficientes para que o receptor possa decifrar a mensagem escolhida, mas não a outra.
+4.  O receptor decifra a mensagem escolhida e **e só essa**.
+
+Contagem:
+Emissor: 3 mensagens
+Receptor: 1 mensagem
+
+#### Módulo Chave Pública
+Formatar a chave para análise humana e ver o tamanho do módulo da chave  pública:
+~~~console
+$ openssl rsa -pubin -in pk.pem -text -noout
+~~~
+
+### Partilha de Segredos de Shamir
+
+### Conceito
+Dividir um segredo entre mais do que duas entidades, assegurando que só a colaboração de um subconjunto de um número fixo dessas entidades é que pode viabilizar a recuperação desse segredo. Gerar um polinomial de grau k para gerar k + 1 segredos.
