@@ -419,6 +419,7 @@ Q.: Ao que é que se refere essa propriedade?
     não se partir, por mais que seja esticado!
 4. Ao facto de ser seguro  para  campos  finitos  muito grandes (primo P grande).
 
+R: 2
 
 
 # 21. Tarefa/Questão
@@ -437,3 +438,4 @@ Q.: Que nome se dá a essa propriedade?
 4. A propriedade de ser Bonito.
 5. A propriedade de ser Dinâmico.
 
+R: 3
