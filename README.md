@@ -461,7 +461,7 @@ $ openssl dgst -sha256 -verify pk.pem -signature noticias.sig noticias.txt
 4. Atribuir certificado a página *HTML*:
 `openssl s_server -cert server.pem -key serverkey.pem -WWW index.html`
 
-
+--------------------------------------------------------------------------------
 ## Autenticação de Entidades: Autenticação Fraca, Razoavelmente Forte e Forte
 
 ### Autenticação Forte
@@ -489,7 +489,7 @@ Processo:
 
 3. Verificação da Assinatura Digital: O autenticador recebe a mensagem e a assinatura digital. Ele então usa a chave pública do requerente para descriptografar a assinatura digital e obter o valor do hash. O autenticador também aplica a mesma função de hash à mensagem recebida. Se os dois valores de hash correspondem, a assinatura digital é verificada e a mensagem é considerada autêntica.
 
-
+--------------------------------------------------------------------------------
 ## Partilha Segura de Segredos e Computação Segura Multipartes
 
 ### Transferência Inconsciente 1 de 2 
@@ -518,3 +518,43 @@ $ openssl rsa -pubin -in pk.pem -text -noout
 
 ### Conceito
 Dividir um segredo entre mais do que duas entidades, assegurando que só a colaboração de um subconjunto de um número fixo dessas entidades é que pode viabilizar a recuperação desse segredo. Gerar um polinomial de grau k para gerar k + 1 segredos.
+
+### Propriedades
+Extensível: De se poderem adicionar mais partilhas sempre que necessárioe sem ser preciso mudar parâmetros do sistema.
+Flexível: De ser possível criar tantas partilha quanto  necessário,  e de ser possível dar mais do que uma partilha a várias  entidades.
+
+
+--------------------------------------------------------------------------------
+## Terno de Algoritmos que Concretizam a Cifra ElGamal (Java)
+
+### El-Gamal
+Três algoritmos: Gerar as chaves; Cifrar; Decifrar;
+
+#### Comando para Gerar Gerador, `g`, e Número P, `P`
+`openssl dhparam -text -dsaparam 1024`
+
+#### Gerar as Chaves
+**Alice**
+1. Gera um número primo P (extremamente grande)
+2. Encontre um gerador do grupo g
+3. Gera um número entre 0 < x < P - 1
+4. X = g ^ x mod P
+
+Chave pública da Alice pk = (X, g, P)
+Chave privada da Alice sk = x
+
+#### Cifrar
+**Bob (X - xAlice, g - gAlice, P- pAlice)**
+1. Gera número entre 0 < y < P - 1
+2. Y = g ^ y mod P
+3. K = X ^ y mod P
+4. c = AES(K, m) || t = HMAC(K,m)
+5. Envia Y, c, t (um número, um criptograma, um código de autenticação)
+
+#### Decifrar
+**Alice (Y - yBob, c - cBob, t - tBob)**
+1. K' = Y ^ x mod P
+2. Verifica o mac, se verificar decifra a mensagem:
+   2.1. m = AES-D(K',c)
+ 
+
