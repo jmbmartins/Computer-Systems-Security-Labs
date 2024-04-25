@@ -56,23 +56,28 @@ class ECPoint:
      
       return ECPoint(x3,y3)
 
-   def sum(self,p2):
-     
-     #CODE IS MISSING   
-     
-     x3 = 0
-     y3 = 0
-     return ECPoint(x3,y3)
+   def sum(self, p2):
+    if (self.x, self.y) == (p2.x, p2.y):
+        s = (3 * self.x**2 + self.ec.a) * modInverse(2 * self.y, self.ec.p)
+    else:
+        s = (p2.y - self.y) * modInverse(p2.x - self.x, self.ec.p)
+    x3 = (s**2 - self.x - p2.x) % self.ec.p
+    y3 = (s * (self.x - x3) - self.y) % self.ec.p
+    return ECPoint(x3, y3)
 
 
    def multiplyPointByScalar(self, n):
-     
-     result = ECPoint(self.x,self.y)
-     p1 = ECPoint(self.x,self.y)
+    result = ECPoint(self.x, self.y)
+    p1 = ECPoint(self.x, self.y)
 
-     #CODE IS MISSING
+    n = bin(n)[2:]  # Convert to binary and strip the '0b' prefix
 
-     return result;
+    for i in range(1, len(n)):  # Skip the first bit
+        result = result.sum(result)  # Double the current point
+        if n[i] == '1':
+            result = result.sum(p1)  # Add p1 if the current bit is 1
+
+    return result
 
 
 
@@ -95,3 +100,7 @@ def main():
   print("p1+p1+p1+p1")
   print(hex(int(p3.sum(p1).x)))
   print(hex(int(p3.sum(p1).y)))
+
+
+if __name__ == "__main__":
+    main()
