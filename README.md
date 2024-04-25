@@ -556,5 +556,10 @@ Chave privada da Alice sk = x
 1. K' = Y ^ x mod P
 2. Verifica o mac, se verificar decifra a mensagem:
    2.1. m = AES-D(K',c)
- 
+
+
+
+--------------------------------------------------------------------------------
+## Terno de Algoritmos que Concretizam a Cifra ElGamal em Curvas Elipticas (Python)
+
 
