@@ -62,21 +62,6 @@ $ openssl enc -e -chacha20 -in plaintext.txt -out ciphertext.cc20 -K abcdef01234
 $ openssl enc -e -rc4 -in plaintext.txt -out ciphertext.rc4 -K abcdef0123456789
 ~~~
 
-### Fórmula para **encriptar** ficheiro:
-
-~~~console
-$ openssl enc -e <ALGORTIMO> -in <ficheiro> -out <criptograma> -K <chave> 
-~~~
-
-#### Exemplos:
-
-~~~console
-$ openssl enc -e -chacha20 -in plaintext.txt -out ciphertext.cc20 -K abcdef0123456789
-~~~
-~~~console
-$ openssl enc -e -rc4 -in plaintext.txt -out ciphertext.rc4 -K abcdef0123456789
-~~~
-
 
 ### Fórmula para **desencriptar** ficheiro:
 
@@ -99,7 +84,7 @@ $ openssl enc -d -rc4 -in ciphertext.rc4 -out textodesencriptado.txt -K abcdef01
 - A melhor para cifrar à medida que os dados são gerados.
 
 - Sofre do problema da **Maneabilidade** (Muito maneável):
-  - Caso se sofra um ataque de homem no meio **ativo**, o recetor da mensagem não irá conseguir detatar a alteração.
+  - Caso se sofra um ataque de homem no meio **ativo**, o recetor da mensagem não irá conseguir detetar a alteração.
 
 
 
@@ -115,6 +100,7 @@ $ openssl enc -d -rc4 -in ciphertext.rc4 -out textodesencriptado.txt -K abcdef01
 **Extensões**: 
   - AES ECB (Eletronic Code Book): 
     - Cifra cada bloco individualmente com a mesma chave, ou seja, dois blocos iguais vão originar o mesmo criptograma.
+    - Não precisa de um iv
     - Padding: Preenchimento do bloco 
         - Exemplo: OLATUDOBEM (10 bytes - faltam 6 para os 16 bytes, logo meter o 6, 6x)  ->  OLATUDOBEM666666.  
 
@@ -159,6 +145,13 @@ $ openssl enc -d -aes-128-cbc -in ciphertext.cbc -out textodesencriptado.txt -K 
 - AES ECB
 ~~~console
 $ openssl enc -d -aes-128-cbc -in ciphertext.ecb -out textodesencriptado.txt -K abcdef0123456789 
+~~~
+
+Exceção: CTR -*CounTeR*
+
+Tranforma qualquer cifra por blocos numa cifra simétrica continua - **Maneável**
+~~~console
+$  openssl enc -aes-128-ctr -K 0123456789abcdef -in texto-limpo.txt -out cifrado.aes-ctr -iv 0123456789
 ~~~
 
 
@@ -225,22 +218,19 @@ $ openssl enc -aes128 -e -k 11121212asqwqs -in texto-limpo.sha1 -out texto-limpo
 
 
 
-####  **Verificar** um MAC
+####  **Verificar** um MAC 
 
+(Não envolve chave)
 
 1. Calcular o valor de hash (SHA1) do ficheiro que recebi
 ~~~console
-$ openssl dgst -sha1 texto-limpo.txt
+$ openssl dgst -sha1 texto-limpo.txt > arquivorecebido.mac
 ~~~
 
-2. Decifrar o ficheiro "texto-limpo.sha1.aes"
-~~~console
-$ openssl enc -d -aes128 -k 11121212asqwqs -in texto-limpo.sha1.aes -out texto-limpo.sha1.txt -iv 0
-~~~
 
-1. Diferença do hash do ficheiro recebido e do hash do ficheiro desencriptado
+2. Diferença do hash do ficheiro recebido e do hash do ficheiro 
 ~~~console
-$ diff arquivo_recebido.sha1 arquivo_recebido.sha1.txt
+$ diff arquivorecebido arquivo.mac
 ~~~
 
 
@@ -250,7 +240,9 @@ $ diff arquivo_recebido.sha1 arquivo_recebido.sha1.txt
 2. O ficheiro não foi alterado, intencionalmente, durante a transmissão (autenticação da origem da informação)
 
 
-### **HMAC** - Hash Message Authentication Code
+### **HMAC** - Hash Message Authentication Code 
+
+(Envolve chave)
 
 1. Criar:
 ~~~console
