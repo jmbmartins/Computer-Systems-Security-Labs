@@ -275,10 +275,14 @@ Uma cifra de chave pública tem:
   - algoritmo para cifrar 
   - algoritmo para decifrar
 
+### Formatar a Chave para Análise Humana
+
+~~~console
+openssl rsa -pubin -text -noout -in pk1.pem
+~~~
+
 
 ### **Gerar** Par Chaves Aleatórias
-
-
 
 
 ~~~console
@@ -397,14 +401,19 @@ $ openssl dgst -sha256 -sign sk-and-pk.pem -out noticias.sig noticias.txt
 
 ### Verificar Assinatura
 
-
+Example 1:
 ~~~console
 $ openssl dgst -sha256 -verify publickey.pem -signature signature.sign file.txt
 ~~~
 
-Example:
+Example 2:
 ~~~console
 $ openssl dgst -sha256 -verify pk.pem -signature noticias.sig noticias.txt
+~~~
+
+Example 3:
+~~~console
+$ openssl rsautl -verify -pubin -inkey pk.pem -in es-feio.md5 -out decrypted.md5
 ~~~
 
 
