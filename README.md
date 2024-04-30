@@ -62,21 +62,6 @@ $ openssl enc -e -chacha20 -in plaintext.txt -out ciphertext.cc20 -K abcdef01234
 $ openssl enc -e -rc4 -in plaintext.txt -out ciphertext.rc4 -K abcdef0123456789
 ~~~
 
-### Fórmula para **encriptar** ficheiro:
-
-~~~console
-$ openssl enc -e <ALGORTIMO> -in <ficheiro> -out <criptograma> -K <chave> 
-~~~
-
-#### Exemplos:
-
-~~~console
-$ openssl enc -e -chacha20 -in plaintext.txt -out ciphertext.cc20 -K abcdef0123456789
-~~~
-~~~console
-$ openssl enc -e -rc4 -in plaintext.txt -out ciphertext.rc4 -K abcdef0123456789
-~~~
-
 
 ### Fórmula para **desencriptar** ficheiro:
 
@@ -99,7 +84,7 @@ $ openssl enc -d -rc4 -in ciphertext.rc4 -out textodesencriptado.txt -K abcdef01
 - A melhor para cifrar à medida que os dados são gerados.
 
 - Sofre do problema da **Maneabilidade** (Muito maneável):
-  - Caso se sofra um ataque de homem no meio **ativo**, o recetor da mensagem não irá conseguir detatar a alteração.
+  - Caso se sofra um ataque de homem no meio **ativo**, o recetor da mensagem não irá conseguir detetar a alteração.
 
 
 
@@ -115,6 +100,7 @@ $ openssl enc -d -rc4 -in ciphertext.rc4 -out textodesencriptado.txt -K abcdef01
 **Extensões**: 
   - AES ECB (Eletronic Code Book): 
     - Cifra cada bloco individualmente com a mesma chave, ou seja, dois blocos iguais vão originar o mesmo criptograma.
+    - Não precisa de um iv
     - Padding: Preenchimento do bloco 
         - Exemplo: OLATUDOBEM (10 bytes - faltam 6 para os 16 bytes, logo meter o 6, 6x)  ->  OLATUDOBEM666666.  
 
@@ -159,6 +145,13 @@ $ openssl enc -d -aes-128-cbc -in ciphertext.cbc -out textodesencriptado.txt -K 
 - AES ECB
 ~~~console
 $ openssl enc -d -aes-128-cbc -in ciphertext.ecb -out textodesencriptado.txt -K abcdef0123456789 
+~~~
+
+Exceção: CTR -*CounTeR*
+
+Tranforma qualquer cifra por blocos numa cifra simétrica continua - **Maneável**
+~~~console
+$  openssl enc -aes-128-ctr -K 0123456789abcdef -in texto-limpo.txt -out cifrado.aes-ctr -iv 0123456789
 ~~~
 
 
@@ -225,22 +218,19 @@ $ openssl enc -aes128 -e -k 11121212asqwqs -in texto-limpo.sha1 -out texto-limpo
 
 
 
-####  **Verificar** um MAC
+####  **Verificar** um MAC 
 
+(Não envolve chave)
 
 1. Calcular o valor de hash (SHA1) do ficheiro que recebi
 ~~~console
-$ openssl dgst -sha1 texto-limpo.txt
+$ openssl dgst -sha1 texto-limpo.txt > arquivorecebido.mac
 ~~~
 
-2. Decifrar o ficheiro "texto-limpo.sha1.aes"
-~~~console
-$ openssl enc -d -aes128 -k 11121212asqwqs -in texto-limpo.sha1.aes -out texto-limpo.sha1.txt -iv 0
-~~~
 
-1. Diferença do hash do ficheiro recebido e do hash do ficheiro desencriptado
+2. Diferença do hash do ficheiro recebido e do hash do ficheiro 
 ~~~console
-$ diff arquivo_recebido.sha1 arquivo_recebido.sha1.txt
+$ diff arquivorecebido arquivo.mac
 ~~~
 
 
@@ -250,7 +240,9 @@ $ diff arquivo_recebido.sha1 arquivo_recebido.sha1.txt
 2. O ficheiro não foi alterado, intencionalmente, durante a transmissão (autenticação da origem da informação)
 
 
-### **HMAC** - Hash Message Authentication Code
+### **HMAC** - Hash Message Authentication Code 
+
+(Envolve chave)
 
 1. Criar:
 ~~~console
@@ -283,10 +275,14 @@ Uma cifra de chave pública tem:
   - algoritmo para cifrar 
   - algoritmo para decifrar
 
+### Formatar a Chave para Análise Humana
+
+~~~console
+openssl rsa -pubin -text -noout -in pk1.pem
+~~~
+
 
 ### **Gerar** Par Chaves Aleatórias
-
-
 
 
 ~~~console
@@ -405,14 +401,19 @@ $ openssl dgst -sha256 -sign sk-and-pk.pem -out noticias.sig noticias.txt
 
 ### Verificar Assinatura
 
-
+Example 1:
 ~~~console
 $ openssl dgst -sha256 -verify publickey.pem -signature signature.sign file.txt
 ~~~
 
-Example:
+Example 2:
 ~~~console
 $ openssl dgst -sha256 -verify pk.pem -signature noticias.sig noticias.txt
+~~~
+
+Example 3:
+~~~console
+$ openssl rsautl -verify -pubin -inkey pk.pem -in es-feio.md5 -out decrypted.md5
 ~~~
 
 
@@ -461,15 +462,38 @@ $ openssl dgst -sha256 -verify pk.pem -signature noticias.sig noticias.txt
 4. Atribuir certificado a página *HTML*:
 `openssl s_server -cert server.pem -key serverkey.pem -WWW index.html`
 
+5. Ligar-se ao servidor e aceder à página:
+`openssl s_client -connect localhost:4433`
+`GET /index.html HTTP/1.1
+Host: localhost`
+
 --------------------------------------------------------------------------------
 ## Autenticação de Entidades: Autenticação Fraca, Razoavelmente Forte e Forte
 
+### Autenticação Fraca
+
+Combinação de um nome de utilizador com uma palavra-chave ou com uma frase chave.
+
+Fator: *The something you know factor*
+
+
+### Autenticação Razoavelmente Forte
+
+Usa uma palavras-passe diferente para cada autenticação (*one time password*).
+
+`openssl dgst -sha256 -binary secret.txt > pass1.txt`
+`openssl dgst -sha256 -binary pass1.txt > pass2.txt`
+(...)
+`openssl dgst -sha256 -binary pass3.txt > pass4.txt`
+
 ### Autenticação Forte
+
+Uso de mecanismos de criptografia de chave simétrica ou assimétrica, como por exemplo, assinatura digital.
 
 #### Protocolo CHAP (*Challenge-Handshake Authentication Protocol*)
 
 Processo:
-1. Início da conexão: Quando a conexão é estabelecida inicialmente, o servidor envia uma "mensagem de desafio" para o cliente.
+1. Início da conexão: Quando a conexão é estabelecida inicialmente, o servidor envia uma "mensagem de desafio (*nonce*)" para o cliente.
 
 2. Resposta ao desafio: O cliente responde ao desafio calculando um valor com base no desafio e na senha conhecida. Este valor é calculado usando uma função de hash, como MD5. A resposta é então enviada de volta para o servidor.
 
@@ -478,16 +502,28 @@ Processo:
 - **Não necessita** que as comunicações sejam cifradas.
 - Precisam ser trocadas **três** mensagens: Desafio, Resposta, Sucesso ou Falha.
 - O segredo fica **guardado em ambos os intervenientes**: O servidor usa o segredo para gerar o desafio que é enviado ao cliente. O cliente, por sua vez, usa o segredo para responder ao desafio. O servidor então verifica a resposta do cliente usando sua própria cópia do segredo.
+- Não está sujeito ao ataque *small n*.
+- Requerente:  O utilizador que faz a autenticação 
 
 
 #### Assinatura Digital
 
 Processo:
-1. Geração de Chaves: O requerente gera um par de chaves - uma chave privada e uma chave pública. A chave privada é mantida em segredo pelo requerente, enquanto a chave pública pode ser compartilhada com qualquer pessoa.
+1.  **Obtenção da chave pública**: Bob (B), o verificador, obtém a chave pública de Alice (A), a requerente, de uma fonte segura. Isso pode ser feito usando uma Infraestrutura de Chave Pública (PKI) e certificados X.509.
 
-2. Criação da Assinatura Digital: Quando o requerente deseja enviar uma mensagem, ele cria uma assinatura digital para a mensagem usando sua chave privada. A assinatura digital é geralmente o resultado de uma função de hash aplicada à mensagem, que é então criptografada usando a chave privada.
+2.  **Geração do nonce**: Bob gera um nonce, que é um número aleatório de tamanho seguro (por exemplo, 128 bits). O nonce é usado para garantir a frescura da sessão e prevenir ataques de repetição.
 
-3. Verificação da Assinatura Digital: O autenticador recebe a mensagem e a assinatura digital. Ele então usa a chave pública do requerente para descriptografar a assinatura digital e obter o valor do hash. O autenticador também aplica a mesma função de hash à mensagem recebida. Se os dois valores de hash correspondem, a assinatura digital é verificada e a mensagem é considerada autêntica.
+3.  **Envio do nonce**: Bob envia o nonce para Alice.
+
+4.  **Assinatura do nonce**: Alice assina o nonce com sua chave privada. Apenas Alice pode produzir essa assinatura específica, pois apenas ela possui sua chave privada.
+
+5.  **Envio da assinatura**: Alice envia a assinatura (t) para Bob.
+
+6.  **Verificação da assinatura**: Bob verifica a assinatura usando a chave pública de Alice. Se a assinatura for válida, Bob acredita na identidade de Alice.
+
+### Protocolos de Conhecimento Zero
+
+Faz uso de mecanismos que provam a identidade sem que o segredo associado à autenticação seja revelado
 
 --------------------------------------------------------------------------------
 ## Partilha Segura de Segredos e Computação Segura Multipartes
@@ -525,6 +561,93 @@ Flexível: De ser possível criar tantas partilha quanto  necessário,  e de ser
 
 
 --------------------------------------------------------------------------------
+## Secure SHell
+
+SSH (Secure Shell) é constituido por dois programas:
+1.  `ssh`: Este é o programa cliente que é usado para fazer login em uma máquina remota e executar comandos nela.
+2.  `sshd`: Este é o servidor SSH que é executado na máquina remota e aceita conexões de clientes SSH.
+
+Ativação de um serviço:
+*Daemon* a correr significa, neste caso, que o sshd vai estar à escuta na porta Transmission Control Protocol (TCP) 22 (por defeito).
+~~~console
+$ systemctl start sshd
+~~~
+
+
+Desligar *firewall* na porta 22:
+~~~console
+$ sudo ufw allow 22/tcp
+~~~
+
+Saber status do serviço:
+~~~console
+$ sudo systemctl status ssh
+~~~
+
+Ligação por SSH a uma máquina
+~~~console
+$ ssh joaom@10.0.2.15
+~~~
+
+### Funcionalidades Básicas do SSH
+
+Altere a porta TCP em que o serviço *SSHd* fica à escuta para a porta 80 e reinicia o serviço:
+~~~console
+$ sudo nano /etc/ssh/sshd_config
+$ sudo systemctl restart ssh
+~~~
+
+Ligar por SSH na porta 80:
+~~~console
+$ ssh -p 80 joaom@10.0.2.15
+~~~
+
+*SSH hopping*: Depois de estar ligado a uma máquina, consegue-se fazer SSH para outras máquinas.
+*SSH tunneling*:  Uma rede privada com vários computadores, e quiser aceder a todos eles de uma rede externa, tenho de permitir uma ligação SSH na gateway/firewall. Os ou￾tros estão imediatamente acessíveis via aquele computador.
+
+
+Cria par de chaves para assinatura digital e guarda em `/home/username/.ssh/id_rsa`:
+~~~console
+$  ssh-keygen
+~~~
+
+Na diretoria `(base) joaom@joaom:~/.ssh$` foi gerado:
+-   `id_rsa`: Este é o arquivo da chave privada.
+-   `id_rsa.pub`: Este é o arquivo da chave pública.
+
+Ligar ao servidor remoto por autenticação de chave SSH:
+1. Copiar chave pública para o servidor remoto e adicioná-la ao arquivo ~/.ssh/authorized_keys do usuário remoto:
+~~~console
+$  ssh-copy-id -p 80 joaom@10.0.2.15
+~~~
+
+
+### Funcionalidades Avançadas do SSH
+
+Copiar um arquivo local para um local remoto via SSH:
+~~~console
+$  scp -P 80 ssi.txt joaom@10.0.2.15:~
+~~~
+
+Voltar a obter-lo remotamente depois de eliminado localmente:
+~~~console
+$  scp -P 80 joaom@10.0.2.15:~/ssi.txt .
+~~~
+
+Copiar diretorias:
+~~~console
+$  scp -r -P port local_directory user@hostname:/path/to/remote_directory
+~~~
+
+Habilitar GUI com opção `-X`:
+~~~console
+$  ssh -X -p 80 joaom@10.0.2.15
+$ nautilus &
+~~~
+
+
+
+---------------------------------------------------------------------------------
 ## Terno de Algoritmos que Concretizam a Cifra ElGamal (Java)
 
 ### El-Gamal
