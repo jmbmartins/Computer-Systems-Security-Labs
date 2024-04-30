@@ -624,7 +624,26 @@ $  ssh-copy-id -p 80 joaom@10.0.2.15
 
 ### Funcionalidades Avançadas do SSH
 
+Copiar um arquivo local para um local remoto via SSH:
+~~~console
+$  scp -P 80 ssi.txt joaom@10.0.2.15:~
+~~~
 
+Voltar a obter-lo remotamente depois de eliminado localmente:
+~~~console
+$  scp -P 80 joaom@10.0.2.15:~/ssi.txt .
+~~~
+
+Copiar diretorias:
+~~~console
+$  scp -r -P port local_directory user@hostname:/path/to/remote_directory
+~~~
+
+Habilitar GUI com opção `-X`:
+~~~console
+$  ssh -X -p 80 joaom@10.0.2.15
+$ nautilus &
+~~~
 
 
 
