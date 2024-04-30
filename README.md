@@ -561,6 +561,74 @@ Flexível: De ser possível criar tantas partilha quanto  necessário,  e de ser
 
 
 --------------------------------------------------------------------------------
+## Secure SHell
+
+SSH (Secure Shell) é constituido por dois programas:
+1.  `ssh`: Este é o programa cliente que é usado para fazer login em uma máquina remota e executar comandos nela.
+2.  `sshd`: Este é o servidor SSH que é executado na máquina remota e aceita conexões de clientes SSH.
+
+Ativação de um serviço:
+*Daemon* a correr significa, neste caso, que o sshd vai estar à escuta na porta Transmission Control Protocol (TCP) 22 (por defeito).
+~~~console
+$ systemctl start sshd
+~~~
+
+
+Desligar *firewall* na porta 22:
+~~~console
+$ sudo ufw allow 22/tcp
+~~~
+
+Saber status do serviço:
+~~~console
+$ sudo systemctl status ssh
+~~~
+
+Ligação por SSH a uma máquina
+~~~console
+$ ssh joaom@10.0.2.15
+~~~
+
+### Funcionalidades Básicas do SSH
+
+Altere a porta TCP em que o serviço *SSHd* fica à escuta para a porta 80 e reinicia o serviço:
+~~~console
+$ sudo nano /etc/ssh/sshd_config
+$ sudo systemctl restart ssh
+~~~
+
+Ligar por SSH na porta 80:
+~~~console
+$ ssh -p 80 joaom@10.0.2.15
+~~~
+
+*SSH hopping*: Depois de estar ligado a uma máquina, consegue-se fazer SSH para outras máquinas.
+*SSH tunneling*:  Uma rede privada com vários computadores, e quiser aceder a todos eles de uma rede externa, tenho de permitir uma ligação SSH na gateway/firewall. Os ou￾tros estão imediatamente acessíveis via aquele computador.
+
+
+Cria par de chaves para assinatura digital e guarda em `/home/username/.ssh/id_rsa`:
+~~~console
+$  ssh-keygen
+~~~
+
+Na diretoria `(base) joaom@joaom:~/.ssh$` foi gerado:
+-   `id_rsa`: Este é o arquivo da chave privada.
+-   `id_rsa.pub`: Este é o arquivo da chave pública.
+
+Ligar ao servidor remoto por autenticação de chave SSH:
+1. Copiar chave pública para o servidor remoto e adicioná-la ao arquivo ~/.ssh/authorized_keys do usuário remoto:
+~~~console
+$  ssh-copy-id -p 80 joaom@10.0.2.15
+~~~
+
+
+### Funcionalidades Avançadas do SSH
+
+
+
+
+
+---------------------------------------------------------------------------------
 ## Terno de Algoritmos que Concretizam a Cifra ElGamal (Java)
 
 ### El-Gamal
