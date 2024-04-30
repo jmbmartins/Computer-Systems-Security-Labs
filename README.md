@@ -462,15 +462,38 @@ $ openssl rsautl -verify -pubin -inkey pk.pem -in es-feio.md5 -out decrypted.md5
 4. Atribuir certificado a página *HTML*:
 `openssl s_server -cert server.pem -key serverkey.pem -WWW index.html`
 
+5. Ligar-se ao servidor e aceder à página:
+`openssl s_client -connect localhost:4433`
+`GET /index.html HTTP/1.1
+Host: localhost`
+
 --------------------------------------------------------------------------------
 ## Autenticação de Entidades: Autenticação Fraca, Razoavelmente Forte e Forte
 
+### Autenticação Fraca
+
+Combinação de um nome de utilizador com uma palavra-chave ou com uma frase chave.
+
+Fator: *The something you know factor*
+
+
+### Autenticação Razoavelmente Forte
+
+Usa uma palavras-passe diferente para cada autenticação (*one time password*).
+
+`openssl dgst -sha256 -binary secret.txt > pass1.txt`
+`openssl dgst -sha256 -binary pass1.txt > pass2.txt`
+(...)
+`openssl dgst -sha256 -binary pass3.txt > pass4.txt`
+
 ### Autenticação Forte
+
+Uso de mecanismos de criptografia de chave simétrica ou assimétrica, como por exemplo, assinatura digital.
 
 #### Protocolo CHAP (*Challenge-Handshake Authentication Protocol*)
 
 Processo:
-1. Início da conexão: Quando a conexão é estabelecida inicialmente, o servidor envia uma "mensagem de desafio" para o cliente.
+1. Início da conexão: Quando a conexão é estabelecida inicialmente, o servidor envia uma "mensagem de desafio (*nonce*)" para o cliente.
 
 2. Resposta ao desafio: O cliente responde ao desafio calculando um valor com base no desafio e na senha conhecida. Este valor é calculado usando uma função de hash, como MD5. A resposta é então enviada de volta para o servidor.
 
@@ -479,16 +502,28 @@ Processo:
 - **Não necessita** que as comunicações sejam cifradas.
 - Precisam ser trocadas **três** mensagens: Desafio, Resposta, Sucesso ou Falha.
 - O segredo fica **guardado em ambos os intervenientes**: O servidor usa o segredo para gerar o desafio que é enviado ao cliente. O cliente, por sua vez, usa o segredo para responder ao desafio. O servidor então verifica a resposta do cliente usando sua própria cópia do segredo.
+- Não está sujeito ao ataque *small n*.
+- Requerente:  O utilizador que faz a autenticação 
 
 
 #### Assinatura Digital
 
 Processo:
-1. Geração de Chaves: O requerente gera um par de chaves - uma chave privada e uma chave pública. A chave privada é mantida em segredo pelo requerente, enquanto a chave pública pode ser compartilhada com qualquer pessoa.
+1.  **Obtenção da chave pública**: Bob (B), o verificador, obtém a chave pública de Alice (A), a requerente, de uma fonte segura. Isso pode ser feito usando uma Infraestrutura de Chave Pública (PKI) e certificados X.509.
 
-2. Criação da Assinatura Digital: Quando o requerente deseja enviar uma mensagem, ele cria uma assinatura digital para a mensagem usando sua chave privada. A assinatura digital é geralmente o resultado de uma função de hash aplicada à mensagem, que é então criptografada usando a chave privada.
+2.  **Geração do nonce**: Bob gera um nonce, que é um número aleatório de tamanho seguro (por exemplo, 128 bits). O nonce é usado para garantir a frescura da sessão e prevenir ataques de repetição.
 
-3. Verificação da Assinatura Digital: O autenticador recebe a mensagem e a assinatura digital. Ele então usa a chave pública do requerente para descriptografar a assinatura digital e obter o valor do hash. O autenticador também aplica a mesma função de hash à mensagem recebida. Se os dois valores de hash correspondem, a assinatura digital é verificada e a mensagem é considerada autêntica.
+3.  **Envio do nonce**: Bob envia o nonce para Alice.
+
+4.  **Assinatura do nonce**: Alice assina o nonce com sua chave privada. Apenas Alice pode produzir essa assinatura específica, pois apenas ela possui sua chave privada.
+
+5.  **Envio da assinatura**: Alice envia a assinatura (t) para Bob.
+
+6.  **Verificação da assinatura**: Bob verifica a assinatura usando a chave pública de Alice. Se a assinatura for válida, Bob acredita na identidade de Alice.
+
+### Protocolos de Conhecimento Zero
+
+Faz uso de mecanismos que provam a identidade sem que o segredo associado à autenticação seja revelado
 
 --------------------------------------------------------------------------------
 ## Partilha Segura de Segredos e Computação Segura Multipartes
