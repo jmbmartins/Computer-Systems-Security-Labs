@@ -671,7 +671,7 @@ Chave privada da Alice sk = x
 1. Gera número entre 0 < y < P - 1
 2. Y = g ^ y mod P
 3. K = X ^ y mod P
-4. c = AES(K, m) || t = HMAC(K,m)
+4. c = AES(K, m) || t = HMAC(X,k)
 5. Envia Y, c, t (um número, um criptograma, um código de autenticação)
 
 #### Decifrar
@@ -685,4 +685,22 @@ Chave privada da Alice sk = x
 --------------------------------------------------------------------------------
 ## Terno de Algoritmos que Concretizam a Cifra ElGamal em Curvas Elipticas (Python)
 
+Baseia-se no problema do logaritmo discreto generalizado.
+
+Principio: Dois pontos de uma curva eliptica somadaos têm que dar um ponto da curva.
+
+Gerador: nG dá todos os pontos da curva eliptica-
+
+Alice:
+Gerra 1 < x < Número de pontos possiveis na curva
+X = xG
+E(a, b, P)
+
+Bob:
+X,E(a, b, P, G)
+Gera 1 < y < Pontos possiveis
+K = yX
+
+Alice
+K = xY
 
