@@ -264,6 +264,24 @@ $ diff textoTXTRecebido.mac  fichmac.mac
 ~~~
 
 
+### ECBC-MAC (Encrypted Cipher Block Chaining MAC)
+
+Vulnerabilidade que propõe resolver (do CBC-MAC): Se a chave de criptografia for usada para criptografar outras mensagens, um atacante pode manipular as mensagens de uma maneira que faça com que duas mensagens diferentes produzam o mesmo MAC.
+
+O ECBC-MAC resolve essa vulnerabilidade criptografando o MAC final (ou seja, o último bloco de texto cifrado) novamente usando uma chave diferente.
+
+- Envolvidas **duas** chaves de integridade.
+
+~~~console
+1)
+# Criptografar a mensagem em modo CBC e obter o último bloco de texto cifrado
+$ openssl enc -aes-128-cbc -K 0123456789abcdef -iv 0 -in ficheiro.txt | tail -c 16 > cbc-mac
+
+2)
+# Criptografe o CBC-MAC em modo ECB para obter o ECBC-MAC
+$ openssl enc -aes-128-ecb -K fedcba9876543210 -in cbc-mac -out ecbc-mac
+~~~
+
 
 
 ---------------------------------------------------------------------------------------
