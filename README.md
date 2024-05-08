@@ -560,12 +560,12 @@ Utilidade: O emissor não sabe qual mensagem o receptor escolheu, e o receptor s
 3.  O emissor envia informações suficientes para que o receptor possa decifrar a mensagem escolhida, mas não a outra.
 4.  O receptor decifra a mensagem escolhida e **e só essa**.
 
+Contagem:
 1. Alice transmite a pk
 2. Alice transmite duas mensagens m1,m2
 3. Bob envia v
 4. Alice envia criptogramas
 
-Contagem:
 Emissor: 3 mensagens
 Receptor: 1 mensagem
 
