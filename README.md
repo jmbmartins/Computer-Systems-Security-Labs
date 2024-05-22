@@ -264,6 +264,24 @@ $ diff textoTXTRecebido.mac  fichmac.mac
 ~~~
 
 
+### ECBC-MAC (Encrypted Cipher Block Chaining MAC)
+
+Vulnerabilidade que propõe resolver (do CBC-MAC): Se a chave de criptografia for usada para criptografar outras mensagens, um atacante pode manipular as mensagens de uma maneira que faça com que duas mensagens diferentes produzam o mesmo MAC.
+
+O ECBC-MAC resolve essa vulnerabilidade criptografando o MAC final (ou seja, o último bloco de texto cifrado) novamente usando uma chave diferente.
+
+- Envolvidas **duas** chaves de integridade.
+
+~~~console
+1)
+# Criptografar a mensagem em modo CBC e obter o último bloco de texto cifrado
+$ openssl enc -aes-128-cbc -K 0123456789abcdef -iv 0 -in ficheiro.txt | tail -c 16 > cbc-mac
+
+2)
+# Criptografe o CBC-MAC em modo ECB para obter o ECBC-MAC
+$ openssl enc -aes-128-ecb -K fedcba9876543210 -in cbc-mac -out ecbc-mac
+~~~
+
 
 
 ---------------------------------------------------------------------------------------
@@ -274,6 +292,8 @@ Uma cifra de chave pública tem:
   - gerador de chaves (pk, sk)
   - algoritmo para cifrar 
   - algoritmo para decifrar
+
+Cifra Deterministica 
 
 ### Formatar a Chave para Análise Humana
 
@@ -541,6 +561,11 @@ Utilidade: O emissor não sabe qual mensagem o receptor escolheu, e o receptor s
 4.  O receptor decifra a mensagem escolhida e **e só essa**.
 
 Contagem:
+1. Alice transmite a pk
+2. Alice transmite duas mensagens m1,m2
+3. Bob envia v
+4. Alice envia criptogramas
+
 Emissor: 3 mensagens
 Receptor: 1 mensagem
 
@@ -671,7 +696,7 @@ Chave privada da Alice sk = x
 1. Gera número entre 0 < y < P - 1
 2. Y = g ^ y mod P
 3. K = X ^ y mod P
-4. c = AES(K, m) || t = HMAC(K,m)
+4. c = AES(K, m) || t = HMAC(X,k)
 5. Envia Y, c, t (um número, um criptograma, um código de autenticação)
 
 #### Decifrar
@@ -685,4 +710,22 @@ Chave privada da Alice sk = x
 --------------------------------------------------------------------------------
 ## Terno de Algoritmos que Concretizam a Cifra ElGamal em Curvas Elipticas (Python)
 
+Baseia-se no problema do logaritmo discreto generalizado.
+
+Principio: Dois pontos de uma curva eliptica somadaos têm que dar um ponto da curva.
+
+Gerador: nG dá todos os pontos da curva eliptica
+
+Alice:
+Gerra 1 < x < Número de pontos possiveis na curva
+X = xG
+E(a, b, P)
+
+Bob:
+X,E(a, b, P, G)
+Gera 1 < y < Pontos possiveis
+K = yX
+
+Alice
+K = xY
 
