@@ -16,4 +16,4 @@ This repository contains lab exercises for the Computer Systems Security course 
 
 ## Cheatsheet
 
-Refer to **[Lab01](cheatsheet.md)** for helpful commands and tips.
+Refer to **[cheat sheet](cheatsheet.md)** for helpful commands and tips.
